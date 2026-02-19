@@ -1,58 +1,52 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
 
-// Load env variables
+// Routes
+import authRoutes from "./routes/authRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
+
 dotenv.config();
 
-// Create app
 const app = express();
 
-// =======================
-// Middleware
-// =======================
-app.use(cors({
-  origin: "*", // Allow requests from anywhere (Vercel, localhost, etc.)
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
+// ===== Middleware =====
 app.use(express.json());
 
-// =======================
-// Routes
-// =======================
-const authRoutes = require("./routes/authRoutes");
-const taskRoutes = require("./routes/taskRoutes");
+// ✅ Allow CORS from anywhere (Vercel + local + others)
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-app.get("/", (req, res) => {
-  res.send("🚀 Task Manager API is running");
-});
-
+// ===== Routes =====
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// =======================
-// Database Connection
-// =======================
+// ===== Test route =====
+app.get("/", (req, res) => {
+  res.send("API is running 🚀");
+});
+
+// ===== DB Connect =====
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ MongoDB Connected");
-  } catch (error) {
-    console.error("❌ MongoDB connection failed:", error.message);
+  } catch (err) {
+    console.error("❌ MongoDB Error:", err.message);
     process.exit(1);
   }
 };
 
 connectDB();
 
-// =======================
-// Start Server
-// =======================
+// ===== Start Server =====
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
