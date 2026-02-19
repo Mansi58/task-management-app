@@ -3,7 +3,9 @@ import { getToken } from "./authService";
 
 // Create axios instance
 const API = axios.create({
-  baseURL: "https://task-management-app.onrender.com/api/tasks",
+ // taskService.js
+baseURL: "https://task-management-app-cioi.onrender.com/api/tasks";
+
 });
 
 // Automatically attach token to every request

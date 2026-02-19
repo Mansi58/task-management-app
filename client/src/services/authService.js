@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "https://task-management-app.onrender.com/api/auth";
+// authService.js
+const API_URL = "https://task-management-app-cioi.onrender.com/api/auth";
+
 
 
 // Register
