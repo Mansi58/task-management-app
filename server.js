@@ -1,12 +1,9 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
 
-// Routes
-import authRoutes from "./routes/authRoutes.js";
-import taskRoutes from "./routes/taskRoutes.js";
-
+// Load env variables
 dotenv.config();
 
 const app = express();
@@ -14,7 +11,7 @@ const app = express();
 // ===== Middleware =====
 app.use(express.json());
 
-// ✅ Allow CORS from anywhere (Vercel + local + others)
+// ✅ Allow requests from anywhere (Vercel + localhost + others)
 app.use(
   cors({
     origin: "*",
@@ -24,21 +21,24 @@ app.use(
 );
 
 // ===== Routes =====
+const authRoutes = require("./routes/authRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// ===== Test route =====
+// ===== Test Route =====
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
 
-// ===== DB Connect =====
+// ===== MongoDB Connection =====
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ MongoDB Connected");
-  } catch (err) {
-    console.error("❌ MongoDB Error:", err.message);
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error.message);
     process.exit(1);
   }
 };
