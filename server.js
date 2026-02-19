@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -11,10 +12,10 @@ const app = express();
 // ===== Middleware =====
 app.use(express.json());
 
-// ✅ Allow requests from anywhere (Vercel + localhost + others)
+// ✅ Allow requests from Vercel + localhost + anywhere
 app.use(
   cors({
-    origin: "*",
+    origin: "*", // You can later restrict this to your Vercel domain
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
