@@ -1,22 +1,19 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
 
-// Import routes
-import authRoutes from "./routes/authRoutes.js";
-import taskRoutes from "./routes/taskRoutes.js";
-
-// Load environment variables
+// Load env variables
 dotenv.config();
 
+// Create app
 const app = express();
 
 // =======================
 // Middleware
 // =======================
 app.use(cors({
-  origin: "*", // Allow all origins (for demo / frontend on Vercel)
+  origin: "*", // Allow requests from anywhere (Vercel, localhost, etc.)
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -26,6 +23,9 @@ app.use(express.json());
 // =======================
 // Routes
 // =======================
+const authRoutes = require("./routes/authRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+
 app.get("/", (req, res) => {
   res.send("🚀 Task Manager API is running");
 });
