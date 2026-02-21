@@ -8,20 +8,17 @@ dotenv.config();
 
 const app = express();
 
-// ===== Middleware (VERY IMPORTANT ORDER) =====
+// ===== Middleware =====
 app.use(express.json());
 
-// ✅ CORS MUST be before routes
+// ✅ CORS (works with Express 5)
 app.use(
   cors({
-    origin: "*", // allow all origins (Vercel, localhost, etc)
+    origin: "*", // allow all (Vercel + localhost)
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// ✅ Handle preflight requests
-app.options("*", cors());
 
 // ===== Routes =====
 const authRoutes = require("./routes/authRoutes");
