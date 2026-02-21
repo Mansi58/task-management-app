@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -9,17 +8,20 @@ dotenv.config();
 
 const app = express();
 
-// ===== Middleware =====
+// ===== Middleware (VERY IMPORTANT ORDER) =====
 app.use(express.json());
 
-// ✅ Allow requests from Vercel + localhost + anywhere
+// ✅ CORS MUST be before routes
 app.use(
   cors({
-    origin: "*", // You can later restrict this to your Vercel domain
+    origin: "*", // allow all origins (Vercel, localhost, etc)
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// ✅ Handle preflight requests
+app.options("*", cors());
 
 // ===== Routes =====
 const authRoutes = require("./routes/authRoutes");
