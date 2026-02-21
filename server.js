@@ -14,12 +14,16 @@ app.use(express.json());
 // ✅ CORS (works with Express 5)
 app.use(
   cors({
-    origin: "*", // allow all (Vercel + localhost)
+    origin: [
+      "http://localhost:3000",
+      "https://task-management-frontend-tan-six.vercel.app",
+      "https://task-management-frontend-oi4y1ahro-mansis-projects-ae5cb6b0.vercel.app"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
   })
 );
-
 // ===== Routes =====
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
