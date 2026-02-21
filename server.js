@@ -7,14 +7,14 @@ dotenv.config();
 
 const app = express();
 
-// ✅ MUST be before routes
+// ✅ CORS MUST be first
 app.use(cors({
-  origin: "*",   // allow all origins (safe for now, fix later if needed)
+  origin: "*",  // allow all origins for now
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// Handle preflight requests
+// ✅ Handle preflight requests explicitly
 app.options("*", cors());
 
 app.use(express.json());
@@ -26,23 +26,17 @@ const taskRoutes = require("./routes/taskRoutes");
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// Test route
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
 
-// MongoDB connect
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("✅ MongoDB Connected");
-  } catch (err) {
+// DB connect
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch(err => {
     console.error("❌ MongoDB error:", err.message);
     process.exit(1);
-  }
-};
-
-connectDB();
+  });
 
 // Start server
 const PORT = process.env.PORT || 5000;
