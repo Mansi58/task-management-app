@@ -8,13 +8,13 @@ dotenv.config();
 const app = express();
 
 // =========================
-// ✅ CORS CONFIG (IMPORTANT)
+// ✅ CORS CONFIG (FIXED)
 // =========================
 app.use(
   cors({
     origin: [
       "https://task-management-frontend-tan-six.vercel.app", // your Vercel frontend
-      "http://localhost:3000" // local dev (optional)
+      "http://localhost:3000" // local dev
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -22,8 +22,9 @@ app.use(
   })
 );
 
-// ✅ Express 5 requires "/*" instead of "*"
-app.options("/*", cors());
+// ✅ IMPORTANT: Express 5 does NOT support "*" or "/*" here
+// Use REGEX instead:
+app.options(/.*/, cors());
 
 // =========================
 // Middleware
