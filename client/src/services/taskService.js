@@ -1,14 +1,10 @@
 import axios from "axios";
 import { getToken } from "./authService";
 
-// Create axios instance
 const API = axios.create({
- // taskService.js
-baseURL: "https://task-management-app-cioi.onrender.com/api/tasks";
-
+  baseURL: "https://task-management-app.onrender.com/api/tasks",
 });
 
-// Automatically attach token to every request
 API.interceptors.request.use((req) => {
   const token = getToken();
   if (token) {
@@ -17,14 +13,7 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-// Fetch all tasks
 export const getTasks = () => API.get("/");
-
-// Add new task
-export const addTask = (taskData) => API.post("/", taskData);
-
-// Update task
-export const updateTask = (id, taskData) => API.put(`/${id}`, taskData);
-
-// Delete task
+export const createTask = (task) => API.post("/", task);
+export const updateTask = (id, task) => API.put(`/${id}`, task);
 export const deleteTask = (id) => API.delete(`/${id}`);
