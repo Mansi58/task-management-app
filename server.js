@@ -10,14 +10,15 @@ const app = express();
 // ✅ CORS — Express 5 compatible (NO app.options("*"))
 app.use(cors({
   origin: [
-    "https://task-management-frontend-tan-six.vercel.app", // your Vercel frontend
-    "http://localhost:3000" // local React
+    "https://task-management-frontend-tan-six.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
 
-app.use(express.json());
+app.options("*", cors());
+
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
