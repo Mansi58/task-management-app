@@ -8,22 +8,32 @@ dotenv.config();
 const app = express();
 
 // =========================
-// ✅ CORS CONFIG (FIXED)
+// ✅ CORS CONFIG (FIXED FOR EXPRESS 5)
 // =========================
+const allowedOrigins = [
+  "https://task-management-frontend-tan-six.vercel.app", // your Vercel frontend
+  "http://localhost:3000"
+];
+
 app.use(
   cors({
-    origin: [
-      "https://task-management-frontend-tan-six.vercel.app", // your Vercel frontend
-      "http://localhost:3000" // local dev
-    ],
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman, Thunder Client)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
   })
 );
 
-// ✅ IMPORTANT: Express 5 does NOT support "*" or "/*" here
-// Use REGEX instead:
+// ✅ Handle ALL preflight requests (Express 5 compatible)
 app.options(/.*/, cors());
 
 // =========================
@@ -44,7 +54,7 @@ app.use("/api/tasks", taskRoutes);
 // Test Route
 // =========================
 app.get("/", (req, res) => {
-  res.send("API is running 🚀");
+  res.json({ message: "API is running 🚀" });
 });
 
 // =========================
