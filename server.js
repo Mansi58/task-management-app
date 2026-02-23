@@ -7,39 +7,59 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS — Express 5 compatible (NO app.options("*"))
-app.use(cors({
-  origin: [
-    "https://task-management-frontend-tan-six.vercel.app", // your Vercel frontend
-    "http://localhost:3000" // local React
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// =========================
+// ✅ CORS CONFIG (IMPORTANT)
+// =========================
+app.use(
+  cors({
+    origin: [
+      "https://task-management-frontend-tan-six.vercel.app", // your Vercel frontend
+      "http://localhost:3000" // local dev (optional)
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  })
+);
 
+// ✅ Express 5 requires "/*" instead of "*"
+app.options("/*", cors());
+
+// =========================
+// Middleware
+// =========================
 app.use(express.json());
 
+// =========================
 // Routes
+// =========================
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// Test route
+// =========================
+// Test Route
+// =========================
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
 
-// MongoDB connect
-mongoose.connect(process.env.MONGO_URI)
+// =========================
+// MongoDB Connection
+// =========================
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => {
-    console.error("❌ MongoDB error:", err.message);
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err.message);
     process.exit(1);
   });
 
-// Start server
+// =========================
+// Start Server
+// =========================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
