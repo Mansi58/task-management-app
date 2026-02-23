@@ -7,15 +7,15 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS MUST be first
+// ✅ CORS (DO NOT use app.options("*") in Express 5)
 app.use(cors({
-  origin: "*",  // allow all origins for now
+  origin: [
+    "https://task-management-frontend-tan-six.vercel.app", // your Vercel frontend
+    "http://localhost:3000" // local dev
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
-// ✅ Handle preflight requests explicitly
-app.options("*", cors());
 
 app.use(express.json());
 
@@ -26,6 +26,7 @@ const taskRoutes = require("./routes/taskRoutes");
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
+// Test route
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
