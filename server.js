@@ -7,11 +7,11 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS (DO NOT use app.options("*") in Express 5)
+// ✅ CORS — Express 5 compatible (NO app.options("*"))
 app.use(cors({
   origin: [
     "https://task-management-frontend-tan-six.vercel.app", // your Vercel frontend
-    "http://localhost:3000" // local dev
+    "http://localhost:3000" // local React
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
 
-// DB connect
+// MongoDB connect
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
   .catch(err => {
